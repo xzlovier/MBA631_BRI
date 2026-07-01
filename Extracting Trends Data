@@ -1,0 +1,33 @@
+from pytrends.request import TrendReq
+import pandas as pd
+import matplotlib.pyplot as plt
+
+pytrends = TrendReq(hl='en-US', tz=330)
+kw_list = ["Byjus"]
+
+pytrends.build_payload(
+    kw_list,
+    timeframe='2022-01-01 2023-12-31',
+    geo='IN'
+)
+
+trends = pytrends.interest_over_time()
+df = trends
+
+trends.to_csv("Byjus_Trend.csv", index = False)
+
+plt.figure(figsize=(12,6))
+
+plt.plot(df.index, df["Byjus"])
+
+plt.title("Google Trends Interest for Byjus (India)")
+plt.xlabel("Date")
+plt.ylabel("Search Interest (0-100)")
+
+plt.xticks(rotation=45)
+
+plt.grid(True)
+
+plt.tight_layout()
+
+plt.show()
