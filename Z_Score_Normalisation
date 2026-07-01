@@ -1,0 +1,40 @@
+import pandas as pd
+from scipy.stats import zscore
+
+news_volume = pd.read_csv("news_volume.csv")
+news_tone   = pd.read_csv("news_tone.csv")
+google_trend = pd.read_csv("google_trends.csv")
+
+news_volume = news_volume.rename(columns={
+    news_volume.columns[1]: "news_volume"
+})
+
+news_tone = news_tone.rename(columns={
+    news_tone.columns[1]: "news_tone"
+})
+
+google_trend = google_trend.rename(columns={
+    google_trend.columns[1]: "google_trend"
+})
+
+news_volume["Date"] = pd.to_datetime(news_volume["Date"])
+news_tone["Date"] = pd.to_datetime(news_tone["Date"])
+google_trend["Date"] = pd.to_datetime(google_trend["Date"])
+
+df = (
+    news_volume
+    .merge(news_tone, on="Date")
+    .merge(google_trend, on="Date")
+)
+
+# Z-score normalization
+
+df["volume_z"] = zscore(df["news_volume"])
+df["tone_z"] = zscore(df["news_tone"])
+df["trends_z"] = zscore(df["google_trend"])
+
+
+df.to_csv("normalized_brand_data.csv", index=False)
+
+print(df.head())
+print("\nSaved as normalized_brand_data.csv")
