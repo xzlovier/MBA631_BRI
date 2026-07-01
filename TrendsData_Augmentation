@@ -1,0 +1,27 @@
+import pandas as pd
+
+trends_df = pd.read_csv('Pepsi Jan-Jun 2017 Trends data.csv')
+news_df = pd.read_csv('Pepsi_Jan-Jun_2017_News_Volume_Cleaned.csv')
+
+trends_df['Time'] = pd.to_datetime(trends_df['Time'])
+news_df['Date'] = pd.to_datetime(news_df['Date'])
+
+trends_df = trends_df.set_index('Time')
+news_dates = news_df['Date'].unique()
+
+trends_daily = trends_df.reindex(news_dates)
+trends_daily.index.name = 'Date'
+
+#using linear interpolation to generate within week data 
+trends_daily['Pepsi_Augmented'] = trends_daily['Pepsi'].interpolate(method='linear')
+
+trends_daily['Pepsi_Augmented'] = trends_daily['Pepsi_Augmented'].ffill().bfill()
+
+
+augmented_trends_df = trends_daily.reset_index()[['Date', 'Pepsi_Augmented']]
+augmented_trends_df['Pepsi_Augmented'] = augmented_trends_df['Pepsi_Augmented'].round(2)
+
+augmented_trends_df.to_csv('Pepsi_Daily_Augmented_Trends.csv', index=False)
+
+print(f"Generated rows: {augmented_trends_df.shape[0]}")
+print(augmented_trends_df.head(10))
