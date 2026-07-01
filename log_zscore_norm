@@ -1,0 +1,25 @@
+import pandas as pd
+import numpy as np
+from scipy.stats import zscore
+
+df = pd.read_csv("brand_data.csv")
+
+# Log Transform volume and trend data for pepsi to get a unifrom distribution of all 3 data points
+
+# log(1+x) handles zero values safely
+
+df["volume_log"] = np.log1p(df["news_volume"])
+df["trends_log"] = np.log1p(df["google_trend"])
+
+#z-score normalise 
+
+df["volume_z"] = zscore(df["volume_log"])
+df["trends_z"] = zscore(df["trends_log"])
+
+# Tone: only Z-score
+df["tone_z"] = zscore(df["news_tone"])
+
+df.to_csv("brand_data_normalized.csv", index=False)
+
+print(df.head())
+print("\nSaved as brand_data_normalized.csv")
