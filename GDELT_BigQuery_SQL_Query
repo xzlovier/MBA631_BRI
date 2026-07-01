@@ -1,0 +1,24 @@
+SELECT
+
+DATE(DATE) AS date,
+
+DocumentIdentifier,
+
+SourceCommonName,
+
+V2Tone,
+
+V2Organizations,
+
+Themes
+
+FROM
+`gdelt-bq.gdeltv2.gkg_partitioned`
+
+WHERE
+
+DATE BETWEEN '2022-01-01' AND '2022-12-31'
+
+AND LOWER(V2Organizations) LIKE '%zomato%'
+
+ORDER BY DATE DESC;
