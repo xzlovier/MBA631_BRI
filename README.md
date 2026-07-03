@@ -33,4 +33,4 @@ This project is open source and available under the MIT License.
 
 ## Contact
 
-For questions or inquiries, please reach out to the repository owner.
+For questions or inquiries, please reach out to the repository owner.   
